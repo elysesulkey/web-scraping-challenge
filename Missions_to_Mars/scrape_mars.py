@@ -9,121 +9,106 @@ def init_browser():
     executable_path = {'executable_path': ChromeDriverManager().install()}
     return Browser('chrome', **executable_path, headless=False)
 
-# Create Mission to Mars global dictionary that can be imported into Mongo
-mars_info = {}
-
 def scrape():
-        # NASA MARS NEWS
+    # NASA MARS NEWS
 
-        # Initialize browser 
-        browser = init_browser()
+    # Initialize browser 
+    browser = init_browser()
 
-        # Visit Nasa news url through splinter module
-        url = 'https://redplanetscience.com/'
-        browser.visit(url)
+    # Visit Nasa news url through splinter module
+    url = 'https://redplanetscience.com/'
+    browser.visit(url)
 
-        # HTML Object
-        html = browser.html
+    # HTML Object
+    html = browser.html
 
-        # Parse HTML with Beautiful Soup
-        soup = BeautifulSoup(html, 'html.parser')
+    # Parse HTML with Beautiful Soup
+    soup = bs(html, 'html.parser')
 
-        # Retrieve the latest element that contains news title and news_paragraph
-        result = soup.find('div', class_="list_text")
-        news_title = result.text
-        news_p = result.find('div',class_="article_teaser_body").text
+    # Retrieve the latest element that contains news title and news_paragraph
+    result = soup.find('div', class_="list_text")
+    news_title = result.text
+    news_p = result.find('div',class_="article_teaser_body").text
 
-        # Dictionary entry for mars news
-        mars_info['news_title'] = news_title
-        mars_info['news_paragraph'] = news_p
+    # FEATURED IMAGE
 
-        # FEATURED IMAGE
+    # Visit Mars Space Images through splinter module
+    img_url = 'https://spaceimages-mars.com/'
+    browser.visit(img_url)
 
-        # Visit Mars Space Images through splinter module
-        img_url = 'https://spaceimages-mars.com/'
-        browser.visit(img_url)
+    # HTML Object 
+    img_html = browser.html
 
-        # HTML Object 
-        img_html = browser.html
+    # Parse HTML with Beautiful Soup
+    soup = bs(img_html, 'html.parser')
 
-        # Parse HTML with Beautiful Soup
-        soup = BeautifulSoup(img_html, 'html.parser')
-
-        # Retrieve url
-        img_result = soup.find('img', class_="headerimage fade-in")['src']
-        img_url = img_result.replace("background-image: url('","").replace("');","")
-        featured_image_url = f"https://spaceimages-mars.com/{img_url}"
+    # Retrieve url
+    img_result = soup.find('img', class_="headerimage fade-in")['src']
+    img_url = img_result.replace("background-image: url('","").replace("');","")
+    featured_image_url = f"https://spaceimages-mars.com/{img_url}"
       
-        # Dictionary entry for featured image
-        mars_info['featured_image_url'] = image_url 
-     
-        # MARS FACTS
+    # MARS FACTS
+    # Visit Mars facts url 
+    facts_url = 'https://galaxyfacts-mars.com/'
+    browser.visit(facts_url)
 
-        # Visit Mars facts url 
-        facts_url = 'https://galaxyfacts-mars.com/'
-        browser.visit(facts_url)
+    # Use Pandas to "read_html" to parse the URL
+    tables = pd.read_html(facts_url)
 
-        # Use Pandas to "read_html" to parse the URL
-        tables = pd.read_html(facts_url)
+    #Find Mars Facts DataFrame in the lists of DataFrames
+    df = tables[1]
+    df.columns = ["Description","Value"]
+    idx_df = df.set_index("Description")
 
-        #Find Mars Facts DataFrame in the lists of DataFrames
-        df = tables[1]
-        df.columns = ["Description","Value"]
-        idx_df = df.set_index("Description")
+    # MARS HEMISPHERE
+    # Visit hemispheres website through splinter module 
+    hemi_url = 'https://marshemispheres.com/'
+    browser.visit(hemi_url)
 
-        # Dictionary entry for Mars facts
-        mars_info['tables'] = idx_df
+    # HTML Object
+    hemi_html = browser.html
 
-        # MARS HEMISPHERE
+    # Parse HTML with Beautiful Soup
+    soup = bs(hemi_html, 'html.parser')
 
-        # Visit hemispheres website through splinter module 
-        hemi_url = 'https://marshemispheres.com/'
-        browser.visit(hemi_url)
+    # Retreive all items that contain mars hemispheres information
+    items = soup.find_all('div', class_='item')
 
-        # HTML Object
-        hemi_html = browser.html
+    # Create empty list for hemisphere urls 
+    hemi_img_urls = []
 
-        # Parse HTML with Beautiful Soup
-        soup = BeautifulSoup(hemi_html, 'html.parser')
+    # Store the main_ul 
+    hemi_main_url = 'https://marshemispheres.com/'
 
-        # Retreive all items that contain mars hemispheres information
-        items = soup.find_all('div', class_='item')
-
-        # Create empty list for hemisphere urls 
-        hemi_img_urls = []
-
-        # Store the main_ul 
-        hemi_main_url = 'https://marshemispheres.com/'
-
-        # Loop through the items previously stored
-        for i in items: 
-            # Store title
-            title = i.find('h3').text
+    # Loop through the items previously stored
+    for i in items: 
+        # Store title
+        title = i.find('h3').text
             
-            # Store link that leads to full image website
-            partial_img_url = i.find('a', class_='itemLink product-item')['href']
+        # Store link that leads to full image website
+        partial_img_url = i.find('a', class_='itemLink product-item')['href']
             
-            # Visit the link that contains the full image website 
-            browser.visit(hemi_main_url + partial_img_url)
+        # Visit the link that contains the full image website 
+        browser.visit(hemi_main_url + partial_img_url)
             
-            # HTML Object of individual hemisphere information website 
-            partial_img_html = browser.html
+        # HTML Object of individual hemisphere information website 
+        partial_img_html = browser.html
             
-            # Parse HTML with Beautiful Soup for every individual hemisphere information website 
-            soup = BeautifulSoup(partial_img_html, 'html.parser')
+        # Parse HTML with Beautiful Soup for every individual hemisphere information website 
+        soup = bs(partial_img_html, 'html.parser')
             
-            # Retrieve full image source 
-            img_url = hemi_main_url + soup.find('img', class_='wide-image')['src']
+        # Retrieve full image source 
+        img_url = hemi_main_url + soup.find('img', class_='wide-image')['src']
             
-            # Append the retreived information into a list of dictionaries 
-            hemi_img_urls.append({"title" : title, "img_url" : img_url})
+        # Append the retreived information into a list of dictionaries 
+        hemi_img_urls.append({"title" : title, "img_url" : img_url})
         
-        # Dictionary entry for Mars hemispheres
-        mars_info['hemi_img_urls'] = hemi_img_urls
+    # Dictionary entry for Mars hemispheres
+    mars_info = {"news_title":news_title,"news_text":news_p,"featured_image":featured_image_url,
+    "facts_table":idx_df,"hemisphere_img":hemi_img_urls}
         
     
-        browser.quit()
+    browser.quit()
 
-        # Return mars_data dictionary 
-
-        return mars_info
+    # Return mars_data dictionary 
+    return mars_info
