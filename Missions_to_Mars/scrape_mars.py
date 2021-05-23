@@ -11,7 +11,6 @@ def init_browser():
 
 def scrape():
     # NASA MARS NEWS
-
     # Initialize browser 
     browser = init_browser()
 
@@ -31,7 +30,6 @@ def scrape():
     news_p = result.find('div',class_="article_teaser_body").text
 
     # FEATURED IMAGE
-
     # Visit Mars Space Images through splinter module
     img_url = 'https://spaceimages-mars.com/'
     browser.visit(img_url)
