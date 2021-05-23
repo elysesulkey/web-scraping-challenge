@@ -130,7 +130,7 @@ def scrape_mars_hemispheres():
             partial_img_url = i.find('a', class_='itemLink product-item')['href']
             
             # Visit the link that contains the full image website 
-             browser.visit(hemi_main_url + partial_img_url)
+            browser.visit(hemi_main_url + partial_img_url)
             
             # HTML Object of individual hemisphere information website 
             partial_img_html = browser.html
