@@ -57,6 +57,7 @@ def scrape():
     df = tables[1]
     df.columns = ["Description","Value"]
     idx_df = df.set_index("Description")
+    facts_html = idx_df.to_html()
 
     # MARS HEMISPHERE
     # Visit hemispheres website through splinter module 
@@ -103,7 +104,7 @@ def scrape():
         
     # Dictionary entry for Mars hemispheres
     mars_info = {"news_title":news_title,"news_text":news_p,"featured_image":featured_image_url,
-    "facts_table":idx_df,"hemisphere_img":hemi_img_urls}
+    "facts_table":facts_html,"hemisphere_img":hemi_img_urls}
         
     
     browser.quit()
