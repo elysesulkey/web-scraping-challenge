@@ -12,8 +12,8 @@ def init_browser():
 # Create Mission to Mars global dictionary that can be imported into Mongo
 mars_info = {}
 
-# NASA MARS NEWS
-def scrape_mars_news():
+def scrape():
+        # NASA MARS NEWS
 
         # Initialize browser 
         browser = init_browser()
@@ -33,19 +33,11 @@ def scrape_mars_news():
         news_title = result.text
         news_p = result.find('div',class_="article_teaser_body").text
 
-        # Dictionary entry from MARS NEWS
+        # Dictionary entry for mars news
         mars_info['news_title'] = news_title
         mars_info['news_paragraph'] = news_p
 
-        return mars_info
-
-        browser.quit()
-
-# FEATURED IMAGE
-def scrape_mars_image():
-
-        # Initialize browser 
-        browser = init_browser()
+        # FEATURED IMAGE
 
         # Visit Mars Space Images through splinter module
         img_url = 'https://spaceimages-mars.com/'
@@ -57,27 +49,17 @@ def scrape_mars_image():
         # Parse HTML with Beautiful Soup
         soup = BeautifulSoup(img_html, 'html.parser')
 
-        # Retrieve background-image url from style tag 
+        # Retrieve url
         img_result = soup.find('img', class_="headerimage fade-in")['src']
-
         img_url = img_result.replace("background-image: url('","").replace("');","")
         featured_image_url = f"https://spaceimages-mars.com/{img_url}"
       
-        # Dictionary entry from FEATURED IMAGE
+        # Dictionary entry for featured image
         mars_info['featured_image_url'] = image_url 
-        
-        browser.quit()
+     
+        # MARS FACTS
 
-        return mars_info
-
-        
-# Mars Facts
-def scrape_mars_facts():
-
-        # Initialize browser 
-        browser = init_browser()
-
-         # Visit Mars facts url 
+        # Visit Mars facts url 
         facts_url = 'https://galaxyfacts-mars.com/'
         browser.visit(facts_url)
 
@@ -89,18 +71,10 @@ def scrape_mars_facts():
         df.columns = ["Description","Value"]
         idx_df = df.set_index("Description")
 
-        # Dictionary entry from Mars Facts
-
+        # Dictionary entry for Mars facts
         mars_info['tables'] = idx_df
 
-        return mars_info
-
-# Mars Hemisphere
-
-def scrape_mars_hemispheres():
-
-        # Initialize browser 
-        browser = init_browser()
+        # MARS HEMISPHERE
 
         # Visit hemispheres website through splinter module 
         hemi_url = 'https://marshemispheres.com/'
@@ -143,10 +117,11 @@ def scrape_mars_hemispheres():
             
             # Append the retreived information into a list of dictionaries 
             hemi_img_urls.append({"title" : title, "img_url" : img_url})
-
+        
+        # Dictionary entry for Mars hemispheres
         mars_info['hemi_img_urls'] = hemi_img_urls
         
-       
+    
         browser.quit()
 
         # Return mars_data dictionary 
