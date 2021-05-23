@@ -3,7 +3,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Mars Data</title>
+    <title>Mars Info</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" 
     integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <style>
@@ -34,8 +34,8 @@
     <!--first section-->
     <div class="container">
         <h4>Latest Mars News</h4>
-        <h5>{{mars_data.mars_news.news_title}}</h5>
-        <p>{{mars_data.mars_news.news_p}}</p>
+        <h5>{{mars_info.mars_info.news_title}}</h5>
+        <p>{{mars_info.mars_info.news_p}}</p>
     </div>
 
 
@@ -45,24 +45,18 @@
             
             <!--left container-->
             <div class="col-8">
-                <h4>Featured Mars Image</h4>
-                <img src={{mars_data.mars_img}} class="img-fluid" alt="Responsive image" style="max-width:100%; max-height: auto;">
+                <h4>Featured Image</h4>
+                <img src={{mars_info.image_url}} class="img-fluid" alt="Responsive image" style="max-width:100%; max-height: auto;">
             </div>
 
             <!--right container-->
             <div class="col-4">
-                <div style="border: 1px solid lightgray; padding: 20px; border-radius: 5px" > 
-                    <h5>Current Weather on Mars</h5>
-                    <p>{{mars_data.mars_weather}}</p>
+                <!-- table -->
+                <h5>Mars Facts</h5>
+                <div style="max-width: 400px; max-height: 100px; font-size: 15px; margin-bottom: 50px;">
+                    {{mars_info.mars_info|table}}
                 </div>
-                <div style="margin-top:30px;">
-                    <!-- table -->
-                    <h5>Mars Facts</h5>
-                    <div style="max-width: 400px; max-height: 100px; font-size: 15px; margin-bottom: 50px;">
-                        {{mars_data.mars_fact|safe}}
-                    </div>
-                </div> 
-            </div>
+            </div> 
 
         </div>
     </div>
@@ -76,7 +70,7 @@
         <div class="col-12">
             <div class="row">
 
-                {% for img in mars_data.mars_hemisphere %}
+                {% for img in mars_info.mars_info %}
                 <div class = "col-6">
                     <!--card items-->
                     <div class="card" style="margin: 30px;">
