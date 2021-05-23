@@ -29,9 +29,9 @@ def scrape_mars_news():
         soup = BeautifulSoup(html, 'html.parser')
 
         # Retrieve the latest element that contains news title and news_paragraph
-       result = soup.find('div', class_="list_text")
-       news_title = result.text
-       news_p = result.find('div',class_="article_teaser_body").text
+        result = soup.find('div', class_="list_text")
+        news_title = result.text
+        news_p = result.find('div',class_="article_teaser_body").text
 
         # Dictionary entry from MARS NEWS
         mars_info['news_title'] = news_title
